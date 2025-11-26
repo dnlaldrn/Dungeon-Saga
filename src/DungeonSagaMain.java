@@ -16,8 +16,8 @@ public class DungeonSagaMain {
 
         Enemy[] levels = {
             new Enemy("White Beast", 80, "Whispering Passage"),
-            new Enemy("Undead Knight", 120, "Catacombs of the Chasm"),
-            new Enemy("Lord Vulcan", 150, "Surtur’s Fiery Chamber")
+            new Enemy("Red Dragon", 120, "Surtur’s Fiery Chamber"),
+            new Enemy("Undead King", 150, "Throne of the Chasm")
         };
 
         for (int i = 0; i < levels.length; i++) {
@@ -29,12 +29,12 @@ public class DungeonSagaMain {
             System.out.println("Location: " + enemy.getLocation());
             System.out.println("Enemy: " + enemy.getName() + " (" + enemy.getMaxHp() + " HP)\n");
 
-            if (!fight(hero, enemy)) {
+            if (!Fight.fight(hero, enemy, enemy)) {
                 System.out.println("GAME OVER. You have fallen.");
                 return;
             }
 
-            System.out.println("\nLEVEL CLEARED! HP restored.\n");
+            System.out.println("\nLEVEL CLEARED! HP restored.\n\n\n\n\n\n");
         }
 
         System.out.println("CONGRATULATIONS! You have conquered the dungeon!");
@@ -57,51 +57,5 @@ public class DungeonSagaMain {
         }
     }
 
-    private static boolean fight(Hero hero, Enemy enemy) {
-        boolean defend = false;
-
-        while (hero.isAlive() && enemy.isAlive()) {
-            System.out.println("--- STATUS ---");
-            System.out.println(hero.getName() + " HP: " + hero.getHp() + "/" + hero.getMaxHp());
-            System.out.println(enemy.getName() + " HP: " + enemy.getHp() + "/" + enemy.getMaxHp());
-
-            System.out.println("\nChoose Action:");
-            System.out.println("1) Attack");
-            System.out.println("2) Defend");
-            System.out.println("3) Special" + (hero.specialAvailable() ? "" : " (USED)"));
-            System.out.print("Input: ");
-
-            String choice = scanner.nextLine();
-            switch (choice) {
-                case "1":
-                    enemy.takeDamage(hero.getAttack());
-                    break;
-                case "2":
-                    defend = true;
-                    System.out.println(hero.getName() + " prepares to block the next attack!");
-                    break;
-                case "3":
-                    hero.useSpecial(enemy);
-                    break;
-                default:
-                    System.out.println("Invalid input. You lose your turn!");
-            }
-
-            if (!enemy.isAlive()) return true;
-
-            int dmg = enemy.randomDamage();
-
-            if (defend) {
-                System.out.println(hero.getName() + " blocks all damage!");
-                defend = false;
-            } else if (hero.blocksThisTurn()) {
-                System.out.println(hero.getName() + " blocks all damage with Shield Bash!");
-                hero.consumeBlock();
-            } else {
-                System.out.println(enemy.getName() + " hits for " + dmg + " damage!");
-                hero.takeDamage(dmg);
-            }
-        }
-        return hero.isAlive();
-    }
+    
 }
