@@ -7,21 +7,21 @@ public class Fight {
         boolean defend = false;
         fightanimation action = new fightanimation();
 
+        // from your main/game loop, NOT here:
+        // hero.resetSpecialForLevel();
+
         while (hero.isAlive() && enemy.isAlive()) {
-            System.out.println("--- STATUS ---");
+            System.out.println("\n--- STATUS ---");
             System.out.println(hero.getName() + " HP: " + hero.getHp() + "/" + hero.getMaxHp());
             System.out.println(enemy.getName() + " HP: " + enemy.getHp() + "/" + enemy.getMaxHp());
 
             action.IdleAnimation(hero, enemy, hero.getName(), location.getLocation());
-            
 
             System.out.println("\nChoose Action:");
             System.out.println("1) Attack");
             System.out.println("2) Defend");
             System.out.println("3) Special" + (hero.specialAvailable() ? "" : " (USED)"));
             System.out.print("Input: ");
-
-            
 
             String choice = scanner.nextLine();
             switch (choice) {
@@ -35,12 +35,17 @@ public class Fight {
                     action.FightAnimation(hero, enemy, hero.getName(), location.getLocation(), choice);
                     break;
                 case "3":
-                    hero.useSpecial(enemy);
-                    action.FightAnimation(hero, enemy, hero.getName(), location.getLocation(), choice);
+                    if (hero.specialAvailable()) {
+                        hero.useSpecial(enemy); 
+                        action.FightAnimation(hero, enemy, hero.getName(), location.getLocation(), choice);
+                    } else {
+                        System.out.println("Special already used this level!");
+                        continue; 
+                    }
                     break;
                 default:
-                    action.FightAnimation(hero, enemy, hero.getName(), location.getLocation(), choice);
                     System.out.println("Invalid input. You lose your turn!");
+                    action.FightAnimation(hero, enemy, hero.getName(), location.getLocation(), choice);
             }
 
             if (!enemy.isAlive()) return true;
