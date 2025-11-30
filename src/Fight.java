@@ -50,14 +50,20 @@ public class Fight {
             int dmg = enemy.randomDamage();
 
             if (defend) {
+                // Defend animation already shows enemy attacking, so don't show it again
                 System.out.println(hero.getName() + " blocks all damage!");
                 defend = false;
-            } else if (hero.blocksThisTurn()) {
-                System.out.println(hero.getName() + " blocks all damage with Shield Bash!");
-                hero.consumeBlock();
             } else {
-                System.out.println(enemy.getName() + " hits for " + dmg + " damage!");
-                hero.takeDamage(dmg);
+                // Show enemy attack animation only when not defending
+                action.EnemyAttackAnimation(hero, enemy, hero.getName(), location.getLocation());
+                
+                if (hero.blocksThisTurn()) {
+                    System.out.println(hero.getName() + " blocks all damage with Shield Bash!");
+                    hero.consumeBlock();
+                } else {
+                    System.out.println(enemy.getName() + " hits for " + dmg + " damage!");
+                    hero.takeDamage(dmg);
+                }
             }
         }
         return hero.isAlive();
